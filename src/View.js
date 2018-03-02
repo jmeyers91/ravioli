@@ -1,4 +1,4 @@
-import Component from 'react';
+import React from 'react';
 import { view } from 'react-easy-state';
 
-export default view(Component);
+export default view(React.Component);
