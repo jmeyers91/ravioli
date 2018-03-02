@@ -18,6 +18,9 @@ export function taskFromPromise(promise) {
     state: PENDING,
     result: null,
     error: null,
+    startTime: Date.now(),
+    endTime: null,
+    elapsed: 0,
 
     get resolved() {
       return task.state === RESOLVED;
@@ -40,21 +43,42 @@ export function taskFromPromise(promise) {
     },
 
     match(states) {
-      switch(this.state) {
-        case PENDING: if(states[PENDING]) return states[PENDING](); break;
-        case RESOLVED: if(states[RESOLVED]) return states[RESOLVED](this.result); break;
-        case REJECTED: if(states[REJECTED]) return states[REJECTED](this.error); break;
-        default: return null;
-      }
+      const pendingFn = states[PENDING];
+      const resolvedFn = states[RESOLVED];
+      const rejectedFn = states[REJECTED];
+      const state = task.state;
+
+      if(state === PENDING && pendingFn) return pendingFn.length ? pendingFn(task.elapsed) : pendingFn();
+      if(state === RESOLVED && resolvedFn) return resolvedFn.length ? resolvedFn(task.result) : resolvedFn();
+      if(state === REJECTED && rejectedFn) return rejectedFn.length ? rejectedFn(task.error) : rejectedFn();
+      return null;
     },
   });
 
+  const requestIdleCallback = window.requestIdleCallback || (fn) => setTimeout(fn, 1000 / 10);
+
+  requestIdleCallback(requestIdleCallbackLoop);
+
+  function updateElapsed() {
+    const now = Date.now();
+    task.elapsed = now - task.startTime;
+    return now;
+  }
+
+  function requestIdleCallbackLoop() {
+    if(!task.pending) return;
+    updateElapsed();
+    requestIdleCallback(requestIdleCallbackLoop);
+  }
+
   promise.then(
     result => {
+      task.endTime = updateElapsed();
       task.result = result;
       task.state = RESOLVED;
     },
     error => {
+      task.endTime = updateElapsed();
       task.error = error;
       task.state = REJECTED;
     },

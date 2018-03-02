@@ -1,28 +1,28 @@
 import View from './View';
 import React from 'react';
 
-function renderChildren(children, ...args) {
+function renderChildren(children, task, key) {
   if(typeof children === 'function') {
-    return children(...args);
+    return children.length ? children(task[key]) : children();
   }
   return children;
 }
 
 export const Pending = (props) => (
   <Async {...props} state="pending">
-    {task => renderChildren(props.children)}
+    {task => renderChildren(props.children, task, 'elapsed')}
   </Async>
 );
 
 export const Resolved = (props) => (
   <Async {...props} state="resolved">
-    {task => renderChildren(props.children, task.result)}
+    {task => renderChildren(props.children, task, 'result')}
   </Async>
 );
 
 export const Rejected = (props) => (
   <Async {...props} state="rejected">
-    {task => renderChildren(props.children, task.error)}
+    {task => renderChildren(props.children, task, 'error')}
   </Async>
 );
 
