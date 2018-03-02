@@ -3,7 +3,11 @@ import React from 'react';
 
 function renderChildren(children, task, key) {
   if(typeof children === 'function') {
-    return children.length ? children(task[key]) : children();
+    if(key) {
+      return children.length ? children(task[key]) : children();
+    } else {
+      return children(task);
+    }
   }
   return children;
 }
