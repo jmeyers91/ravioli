@@ -13,8 +13,6 @@ export function taskFromPromise(promise) {
   promise = promise || Promise.resolve();
   if(isTask(promise)) return promise;
 
-  const _then = promise.then.bind(promise);
-  const _catch = promise.catch.bind(promise);
   const task = store({
     [isTaskSymbol]: true,
     state: PENDING,
