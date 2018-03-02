@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+/*
+  Updates the package version in package.json, builds, commits, and pushes.
+*/
+
+const { execSync } = require('child_process');
+const { writeFileSync } = require('fs');
+const path = require('path');
+const package = require('./package');
+const run = command => execSync(command, {stdio: 'inherit'});
+
+let publishType = (process.argv[2] || 'patch').toLowerCase();
+
+if(!['major', 'minor', 'patch'].includes(publishType)) {
+  publishType = 'patch';
+}
+
+const [major, minor, patch] = package.version.split('.').map(part => +part);
+let newVersion;
+
+switch(publishType) {
+  case 'major': newVersion = [major+1, minor, patch]; break;
+  case 'minor': newVersion = [major, minor+1, patch]; break;
+  case 'patch': newVersion = [major, minor, patch+1]; break;
+}
+
+execSync('npm run build', {stdio: 'inherit'});
+
+package.version = newVersion.join('.');
+writeFileSync(path.join(__dirname, 'package.json'), JSON.stringify(package, null, 2));
+run(`git commit -am "Publish ${publishType}. Update version to ${package.version}."`);
+run('git push origin master');
