@@ -167,7 +167,7 @@ function view(Comp, ref) {
 /* 1 */
 /***/ (function(module, exports) {
 
-module.exports = undefined;
+module.exports = React;
 
 /***/ }),
 /* 2 */
@@ -767,7 +767,7 @@ Async.Rejected = Rejected;
 
 
 
-/* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_1_react_easy_state__["b" /* view */])(__WEBPACK_IMPORTED_MODULE_0_react___default.a));
+/* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_1_react_easy_state__["b" /* view */])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component));
 
 /***/ }),
 /* 6 */
