@@ -4,7 +4,8 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'ravioli.js'
+    filename: 'ravioli.js',
+    library: 'ravioli',
   },
   module: {
     rules: [
@@ -16,5 +17,13 @@ module.exports = {
         }
       }
     ]
+  },
+  externals: {
+    react: {
+      commonjs: 'react',
+      commonjs2: 'react',
+      amd: 'react',
+      root: 'React'
+    }
   }
 };
