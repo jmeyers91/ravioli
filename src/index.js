@@ -1,3 +1,6 @@
+export * from 'react';
+export { default as React } from 'react';
+
 // view and store
 export * from 'react-easy-state';
 
