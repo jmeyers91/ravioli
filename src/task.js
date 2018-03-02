@@ -55,7 +55,8 @@ export function taskFromPromise(promise) {
     },
   });
 
-  const requestIdleCallback = window.requestIdleCallback || (fn) => setTimeout(fn, 1000 / 10);
+  let requestIdleCallback = window.requestIdleCallback;
+  if(!requestIdleCallback) requestIdleCallback = (fn) => setTimeout(fn, 1000 / 10);
 
   requestIdleCallback(requestIdleCallbackLoop);
 
